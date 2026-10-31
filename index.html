@@ -78,22 +78,40 @@
   document.getElementById('assignmentForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    // Basit bir örnek olduğu için API entegrasyon mantığını 
-    // buraya form gönderim simülasyonu olarak ekliyorum.
     const submitBtn = document.getElementById('submitBtn');
     const statusDiv = document.getElementById('status');
     
     submitBtn.disabled = true;
     submitBtn.innerText = 'Gönderiliyor...';
 
-    setTimeout(() => {
+    const payload = {
+      studentName: document.getElementById('studentName').value,
+      studentClass: document.getElementById('studentClass').value,
+      emotionalState: document.getElementById('emotionalState').value,
+      assignmentTitle: document.getElementById('assignmentTitle').value,
+    };
+
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
       statusDiv.className = 'success';
       statusDiv.innerText = 'Ödev bildirimi başarıyla iletildi!';
       statusDiv.style.display = 'block';
       document.getElementById('assignmentForm').reset();
+    })
+    .catch(() => {
+      statusDiv.className = 'error';
+      statusDiv.innerText = 'Gönderim esnasında bir aksaklık yaşandı.';
+      statusDiv.style.display = 'block';
+    })
+    .finally(() => {
       submitBtn.disabled = false;
       submitBtn.innerText = 'Gönder';
-    }, 1500);
+    });
   });
 </script>
 
