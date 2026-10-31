@@ -22,6 +22,9 @@
         button { background-color: #3182ce; color: white; padding: 14px; border: none; border-radius: 8px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         button:hover { background-color: #2b6cb0; }
         .section-title { font-size: 18px; color: #1a365d; margin-top: 25px; margin-bottom: 15px; border-bottom: 2px solid #3182ce; padding-bottom: 5px; }
+        #file-list { margin-top: 15px; padding-left: 0; list-style: none; }
+        #file-list li { background: #f7fafc; border: 1px solid #e2e8f0; padding: 10px; margin-bottom: 5px; border-radius: 6px; display: flex; align-items: center; gap: 10px; }
+        #file-list img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -29,7 +32,9 @@
     <div class="container">
         <h2>Öğrenci Günlük Çalışma Bildirimi</h2>
         
-        <form name="ogrenci-takipv2" method="POST" netlify enctype="multipart/form-data">
+        <form name="ogrenci-takip-v2" method="POST" data-netlify="true" enctype="multipart/form-data">
+            <input type="hidden" name="form-name" value="ogrenci-takip-v2">
+
             <div class="form-group">
                 <label for="ogrenci-adi">Öğrenci Adı Soyadı:</label>
                 <input type="text" id="ogrenci-adi" name="ogrenciAdi" required placeholder="Örn: Ahmet Yılmaz">
@@ -83,9 +88,10 @@
             <div class="form-group">
                 <label for="fotograf">Çözülen Sayfaların Fotoğrafları:</label>
                 <div class="file-upload">
-                    <span class="upload-btn">📄 Fotoğraf Seç veya Çek</span>
+                    <span class="upload-btn" id="upload-label">📄 Fotoğraf Seç veya Çek</span>
                     <input type="file" id="fotograf" name="sayfaFotografi" accept="image/*" multiple>
                 </div>
+                <ul id="file-list"></ul>
             </div>
 
             <div class="form-group">
@@ -112,5 +118,39 @@
         </form>
     </div>
 
+    <script>
+        const fileInput = document.getElementById('fotograf');
+        const uploadLabel = document.getElementById('upload-label');
+        const fileList = document.getElementById('file-list');
+
+        fileInput.addEventListener('change', function() {
+            fileList.innerHTML = '';
+            
+            if (this.files && this.files.length > 0) {
+                uploadLabel.textContent = `📁 ${this.files.length} fotoğraf seçildi`;
+                
+                Array.from(this.files).forEach(file => {
+                    const li = document.createElement('li');
+                    
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            li.appendChild(img);
+                            li.appendChild(document.createTextNode(file.name));
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        li.appendChild(document.createTextNode(file.name));
+                    }
+                    
+                    fileList.appendChild(li);
+                });
+            } else {
+                uploadLabel.textContent = '📄 Fotoğraf Seç veya Çek';
+            }
+        });
+    </script>
 </body>
 </html>
