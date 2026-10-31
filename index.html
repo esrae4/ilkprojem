@@ -13,27 +13,22 @@
         .checkbox-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f7fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
         .checkbox-group label { font-weight: normal; color: #4a5568; display: flex; align-items: center; }
         .checkbox-group input { margin-right: 10px; width: 18px; height: 18px; }
-        .net-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .net-inputs label { font-size: 14px; font-weight: normal; color: #718096; margin-bottom: 2px; }
-        .file-upload { position: relative; overflow: hidden; display: block; width: 100%; }
+        .file-upload { position: relative; overflow: hidden; display: block; width: 100%; margin-bottom: 10px; }
         .file-upload input[type=file] { position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
         .upload-btn { display: block; background: #edf2f7; color: #4a5568; text-align: center; padding: 15px; border-radius: 6px; border: 1px dashed #cbd5e0; cursor: pointer; font-weight: 600; }
         .upload-btn:hover { background: #e2e8f0; }
         button { background-color: #3182ce; color: white; padding: 14px; border: none; border-radius: 8px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         button:hover { background-color: #2b6cb0; }
         .section-title { font-size: 18px; color: #1a365d; margin-top: 25px; margin-bottom: 15px; border-bottom: 2px solid #3182ce; padding-bottom: 5px; }
-        #file-list { margin-top: 15px; padding-left: 0; list-style: none; }
-        #file-list li { background: #f7fafc; border: 1px solid #e2e8f0; padding: 10px; margin-bottom: 5px; border-radius: 6px; display: flex; align-items: center; gap: 10px; }
-        #file-list img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>Öğrenci Günlük Çalışma Bildirimi</h2>
+        <h2>Öğrenci Günlük Ödev Bildirimi</h2>
         
-        <form name="ogrenci-takip-v2" method="POST" data-netlify="true" enctype="multipart/form-data">
-            <input type="hidden" name="form-name" value="ogrenci-takip-v2">
+        <form name="ogrenci-odev-takip" method="POST" data-netlify="true" enctype="multipart/form-data">
+            <input type="hidden" name="form-name" value="ogrenci-odev-takip">
 
             <div class="form-group">
                 <label for="ogrenci-adi">Öğrenci Adı Soyadı:</label>
@@ -56,44 +51,28 @@
                 </div>
             </div>
 
-            <div class="section-title">TYT Netleri</div>
-            <div class="net-inputs">
-                <div><label>Türkçe:</label><input type="number" name="tytTurkce" step="0.25"></div>
-                <div><label>Tarih:</label><input type="number" name="tytTarih" step="0.25"></div>
-                <div><label>Coğrafya:</label><input type="number" name="tytCografya" step="0.25"></div>
-                <div><label>Felsefe:</label><input type="number" name="tytFelsefe" step="0.25"></div>
-                <div><label>Din Kültürü:</label><input type="number" name="tytDin" step="0.25"></div>
-                <div><label>Temel Matematik:</label><input type="number" name="tytMatematik" step="0.25"></div>
-                <div><label>Fizik:</label><input type="number" name="tytFizik" step="0.25"></div>
-                <div><label>Kimya:</label><input type="number" name="tytKimya" step="0.25"></div>
-                <div><label>Biyoloji:</label><input type="number" name="tytBiyoloji" step="0.25"></div>
-            </div>
-
-            <div class="section-title">AYT Netleri</div>
-            <div class="net-inputs">
-                <div><label>Türk Dili Edebiyatı:</label><input type="number" name="aytEdebiyat" step="0.25"></div>
-                <div><label>Tarih-1:</label><input type="number" name="aytTarih1" step="0.25"></div>
-                <div><label>Coğrafya-1:</label><input type="number" name="aytCografya1" step="0.25"></div>
-                <div><label>Tarih-2:</label><input type="number" name="aytTarih2" step="0.25"></div>
-                <div><label>Coğrafya-2:</label><input type="number" name="aytCografya2" step="0.25"></div>
-                <div><label>Felsefe Grubu:</label><input type="number" name="aytFelsefe" step="0.25"></div>
-                <div><label>Din Kültürü:</label><input type="number" name="aytDin" step="0.25"></div>
-                <div><label>Matematik:</label><input type="number" name="aytMatematik" step="0.25"></div>
-                <div><label>Fizik:</label><input type="number" name="aytFizik" step="0.25"></div>
-                <div><label>Kimya:</label><input type="number" name="aytKimya" step="0.25"></div>
-                <div><label>Biyoloji:</label><input type="number" name="aytBiyoloji" step="0.25"></div>
+            <div class="section-title">Çözülen Sayfaların Fotoğrafları</div>
+            <div class="form-group">
+                <label>Fotoğraf 1:</label>
+                <div class="file-upload">
+                    <span class="upload-btn">📄 Fotoğraf 1 Seç veya Çek</span>
+                    <input type="file" name="sayfaFotografi1" accept="image/*">
+                </div>
+                
+                <label>Fotoğraf 2:</label>
+                <div class="file-upload">
+                    <span class="upload-btn">📄 Fotoğraf 2 Seç veya Çek</span>
+                    <input type="file" name="sayfaFotografi2" accept="image/*">
+                </div>
+                
+                <label>Fotoğraf 3:</label>
+                <div class="file-upload">
+                    <span class="upload-btn">📄 Fotoğraf 3 Seç veya Çek</span>
+                    <input type="file" name="sayfaFotografi3" accept="image/*">
+                </div>
             </div>
 
             <div class="section-title">Genel Bilgiler</div>
-            <div class="form-group">
-                <label for="fotograf">Çözülen Sayfaların Fotoğrafları:</label>
-                <div class="file-upload">
-                    <span class="upload-btn" id="upload-label">📄 Fotoğraf Seç veya Çek</span>
-                    <input type="file" id="fotograf" name="sayfaFotografi" accept="image/*" multiple>
-                </div>
-                <ul id="file-list"></ul>
-            </div>
-
             <div class="form-group">
                 <label for="duygu-durumu">Bugünkü Duygu Durumun:</label>
                 <select id="duygu-durumu" name="duyguDurumu">
@@ -118,39 +97,5 @@
         </form>
     </div>
 
-    <script>
-        const fileInput = document.getElementById('fotograf');
-        const uploadLabel = document.getElementById('upload-label');
-        const fileList = document.getElementById('file-list');
-
-        fileInput.addEventListener('change', function() {
-            fileList.innerHTML = '';
-            
-            if (this.files && this.files.length > 0) {
-                uploadLabel.textContent = `📁 ${this.files.length} fotoğraf seçildi`;
-                
-                Array.from(this.files).forEach(file => {
-                    const li = document.createElement('li');
-                    
-                    if (file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const img = document.createElement('img');
-                            img.src = e.target.result;
-                            li.appendChild(img);
-                            li.appendChild(document.createTextNode(file.name));
-                        };
-                        reader.readAsDataURL(file);
-                    } else {
-                        li.appendChild(document.createTextNode(file.name));
-                    }
-                    
-                    fileList.appendChild(li);
-                });
-            } else {
-                uploadLabel.textContent = '📄 Fotoğraf Seç veya Çek';
-            }
-        });
-    </script>
 </body>
 </html>
