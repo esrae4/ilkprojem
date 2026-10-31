@@ -2,14 +2,15 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Öğrenci Takip Sistemi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Günlük Ödev Bildirimi</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef1f5; margin: 0; padding: 20px; }
         .container { max-width: 650px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); margin: auto; }
         h2 { color: #1a365d; text-align: center; margin-bottom: 25px; }
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748; }
-        input[type="text"], input[type="number"], textarea, select { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        input[type="text"], textarea, select { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
         .checkbox-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f7fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
         .checkbox-group label { font-weight: normal; color: #4a5568; display: flex; align-items: center; }
         .checkbox-group input { margin-right: 10px; width: 18px; height: 18px; }
@@ -17,8 +18,12 @@
         .file-upload input[type=file] { position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
         .upload-btn { display: block; background: #edf2f7; color: #4a5568; text-align: center; padding: 15px; border-radius: 6px; border: 1px dashed #cbd5e0; cursor: pointer; font-weight: 600; }
         .upload-btn:hover { background: #e2e8f0; }
-        button { background-color: #3182ce; color: white; padding: 14px; border: none; border-radius: 8px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-        button:hover { background-color: #2b6cb0; }
+        .preview-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        .preview-card { position: relative; width: 90px; height: 90px; border-radius: 8px; overflow: hidden; border: 1px solid #cbd5e0; }
+        .preview-card img { width: 100%; height: 100%; object-fit: cover; }
+        .preview-card .remove-btn { position: absolute; top: 2px; right: 2px; background: rgba(229, 62, 62, 0.85); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        button[type="submit"] { background-color: #3182ce; color: white; padding: 14px; border: none; border-radius: 8px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 15px; }
+        button[type="submit"]:hover { background-color: #2b6cb0; }
         .section-title { font-size: 18px; color: #1a365d; margin-top: 25px; margin-bottom: 15px; border-bottom: 2px solid #3182ce; padding-bottom: 5px; }
     </style>
 </head>
@@ -53,23 +58,11 @@
 
             <div class="section-title">Çözülen Sayfaların Fotoğrafları</div>
             <div class="form-group">
-                <label>Fotoğraf 1:</label>
                 <div class="file-upload">
-                    <span class="upload-btn">📄 Fotoğraf 1 Seç veya Çek</span>
-                    <input type="file" name="sayfaFotografi1" accept="image/*">
+                    <span class="upload-btn">📷 Fotoğrafları Seç veya Çek (Çoklu Seçim)</span>
+                    <input type="file" id="foto-input" name="sayfaFotograflari" accept="image/*" multiple>
                 </div>
-                
-                <label>Fotoğraf 2:</label>
-                <div class="file-upload">
-                    <span class="upload-btn">📄 Fotoğraf 2 Seç veya Çek</span>
-                    <input type="file" name="sayfaFotografi2" accept="image/*">
-                </div>
-                
-                <label>Fotoğraf 3:</label>
-                <div class="file-upload">
-                    <span class="upload-btn">📄 Fotoğraf 3 Seç veya Çek</span>
-                    <input type="file" name="sayfaFotografi3" accept="image/*">
-                </div>
+                <div id="preview-area" class="preview-container"></div>
             </div>
 
             <div class="section-title">Genel Bilgiler</div>
@@ -97,5 +90,48 @@
         </form>
     </div>
 
+    <script>
+        const fileInput = document.getElementById('foto-input');
+        const previewArea = document.getElementById('preview-area');
+        let selectedFiles = [];
+
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            selectedFiles = selectedFiles.concat(files);
+            renderPreviews();
+            updateFileInput();
+        });
+
+        function renderPreviews() {
+            previewArea.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const card = document.createElement('div');
+                card.className = 'preview-card';
+
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'remove-btn';
+                removeBtn.innerHTML = '✕';
+                removeBtn.onclick = () => {
+                    selectedFiles.splice(index, 1);
+                    renderPreviews();
+                    updateFileInput();
+                };
+
+                card.appendChild(img);
+                card.appendChild(removeBtn);
+                previewArea.appendChild(card);
+            });
+        }
+
+        function updateFileInput() {
+            const dt = new DataTransfer();
+            selectedFiles.forEach(file => dt.items.add(file));
+            fileInput.files = dt.files;
+        }
+    </script>
 </body>
 </html>
