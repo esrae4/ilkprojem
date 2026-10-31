@@ -4,14 +4,22 @@
     <meta charset="UTF-8">
     <title>Öğrenci Takip Sistemi</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; }
-        .container { max-width: 600px; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin: auto; }
-        h2 { color: #2c3e50; text-align: center; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { background-color: #27ae60; color: white; padding: 12px; border: none; border-radius: 5px; width: 100%; font-size: 16px; cursor: pointer; }
-        button:hover { background-color: #219653; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef1f5; margin: 0; padding: 20px; }
+        .container { max-width: 650px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); margin: auto; }
+        h2 { color: #1a365d; text-align: center; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748; }
+        input[type="text"], input[type="number"], textarea, select { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        .checkbox-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f7fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .checkbox-group label { font-weight: normal; color: #4a5568; display: flex; align-items: center; }
+        .checkbox-group input { margin-right: 10px; width: 18px; height: 18px; }
+        .file-upload { position: relative; overflow: hidden; display: block; width: 100%; }
+        .file-upload input[type=file] { position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+        .upload-btn { display: block; background: #edf2f7; color: #4a5568; text-align: center; padding: 15px; border-radius: 6px; border: 1px dashed #cbd5e0; cursor: pointer; font-weight: 600; }
+        .upload-btn:hover { background: #e2e8f0; }
+        button { background-color: #3182ce; color: white; padding: 14px; border: none; border-radius: 8px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        button:hover { background-color: #2b6cb0; }
+        .net-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     </style>
 </head>
 <body>
@@ -19,36 +27,62 @@
     <div class="container">
         <h2>Öğrenci Günlük Çalışma Bildirimi</h2>
         
-        <form name="ogrenci-takip" method="POST" netlify>
+        <form name="ogrenci-takip" method="POST" netlify enctype="multipart/form-data">
             <div class="form-group">
                 <label for="ogrenci-adi">Öğrenci Adı Soyadı:</label>
                 <input type="text" id="ogrenci-adi" name="ogrenciAdi" required placeholder="Örn: Ahmet Yılmaz">
             </div>
 
             <div class="form-group">
-                <label for="ders">Çalışılan Ders:</label>
-                <select id="ders" name="ders">
-                    <option value="Matematik">Matematik</option>
-                    <option value="Geometri">Geometri</option>
-                    <option value="Fizik">Fizik</option>
-                    <option value="Kimya">Kimya</option>
-                    <option value="Biyoloji">Biyoloji</option>
-                    <option value="Türkçe">Türkçe</option>
-                    <option value="Dil Bilgisi">Dil Bilgisi</option>
-                    <option value="Paragraf">Paragraf</option>
-                    <option value="Tarih">Tarih</option>
-                    <option value="Coğrafya">Coğrafya</option>
+                <label>Çalışılan Dersler:</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="ders" value="Matematik"> Matematik</label>
+                    <label><input type="checkbox" name="ders" value="Geometri"> Geometri</label>
+                    <label><input type="checkbox" name="ders" value="Fizik"> Fizik</label>
+                    <label><input type="checkbox" name="ders" value="Kimya"> Kimya</label>
+                    <label><input type="checkbox" name="ders" value="Biyoloji"> Biyoloji</label>
+                    <label><input type="checkbox" name="ders" value="Türkçe"> Türkçe</label>
+                    <label><input type="checkbox" name="ders" value="Dil Bilgisi"> Dil Bilgisi</label>
+                    <label><input type="checkbox" name="ders" value="Paragraf"> Paragraf</label>
+                    <label><input type="checkbox" name="ders" value="Tarih"> Tarih</label>
+                    <label><input type="checkbox" name="ders" value="Coğrafya"> Coğrafya</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Deneme Netleri (Opsiyonel):</label>
+                <div class="net-inputs">
+                    <input type="number" name="tytNeti" placeholder="TYT Neti" step="0.25">
+                    <input type="number" name="aytNeti" placeholder="AYT Neti" step="0.25">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="fotograf">Çözülen Sayfaların Fotoğrafları:</label>
+                <div class="file-upload">
+                    <span class="upload-btn">📄 Fotoğraf Seç veya Çek</span>
+                    <input type="file" id="fotograf" name="sayfaFotografi" accept="image/*" multiple>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="duygu-durumu">Bugünkü Duygu Durumun:</label>
+                <select id="duygu-durumu" name="duyguDurumu">
+                    <option value="" disabled selected>Lütfen hissini seç...</option>
+                    <option value="Gayretli">Gayretli / İstekli</option>
+                    <option value="Huzurlu">Huzurlu / Sakin</option>
+                    <option value="Tatmin Olmuş">Tatmin Olmuş</option>
+                    <option value="Meraklı">Meraklı</option>
+                    <option value="Yorgun">Yorgun</option>
+                    <option value="Kaygılı">Kaygılı / Gergin</option>
+                    <option value="İsteksiz">İsteksiz / Bıkkın</option>
+                    <option value="Şaşkın">Şaşkın / Kafası Karışık</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="soru-sayisi">Çözülen Soru Sayısı:</label>
-                <input type="number" id="soru-sayisi" name="soruSayisi" placeholder="Örn: 75">
-            </div>
-
-            <div class="form-group">
-                <label for="konu">Çalışılan Konu / Notlar:</label>
-                <textarea id="konu" name="konuNotlari" rows="4" placeholder="Bugün hangi konuları çalıştın, zorlandığın yerler var mı?"></textarea>
+                <label for="konu">Çalışılan Konular / Notlar:</label>
+                <textarea id="konu" name="konuNotlari" rows="4" placeholder="Bugün hangi konuları çalıştın?"></textarea>
             </div>
 
             <button type="submit">Raporu Gönder</button>
