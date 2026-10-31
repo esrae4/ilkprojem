@@ -1,190 +1,112 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Öğrenci Günlük Ödev Bildirimi</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef1f5; margin: 0; padding: 20px; }
-        .container { max-width: 650px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); margin: auto; }
-        h2 { color: #1a365d; text-align: center; margin-bottom: 25px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748; }
-        input[type="text"], textarea, select { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        .checkbox-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f7fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
-        .checkbox-group label { font-weight: normal; color: #4a5568; display: flex; align-items: center; }
-        .checkbox-group input { margin-right: 10px; width: 18px; height: 18px; }
-        .file-upload { position: relative; overflow: hidden; display: block; width: 100%; margin-bottom: 10px; }
-        .file-upload input[type=file] { position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-        .upload-btn { display: block; background: #edf2f7; color: #4a5568; text-align: center; padding: 15px; border-radius: 6px; border: 1px dashed #cbd5e0; cursor: pointer; font-weight: 600; }
-        .upload-btn:hover { background: #e2e8f0; }
-        .preview-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
-        .preview-card { position: relative; width: 90px; height: 90px; border-radius: 8px; overflow: hidden; border: 1px solid #cbd5e0; }
-        .preview-card img { width: 100%; height: 100%; object-fit: cover; }
-        .preview-card .remove-btn { position: absolute; top: 2px; right: 2px; background: rgba(229, 62, 62, 0.85); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        button[type="submit"] { background-color: #3182ce; color: white; padding: 14px; border: none; border-radius: 8px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 15px; }
-        button[type="submit"]:hover { background-color: #2b6cb0; }
-        .section-title { font-size: 18px; color: #1a365d; margin-top: 25px; margin-bottom: 15px; border-bottom: 2px solid #3182ce; padding-bottom: 5px; }
-        .status-msg { margin-top: 15px; padding: 12px; border-radius: 6px; text-align: center; display: none; font-weight: bold; }
-        .status-msg.success { background-color: #c6f6d5; color: #22543d; display: block; }
-        .status-msg.error { background-color: #fed7d7; color: #742a2a; display: block; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ödev Teslim Formu</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+    .card { background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 480px; }
+    h2 { margin-top: 0; color: #2c3e50; text-align: center; margin-bottom: 24px; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; color: #34495e; font-size: 14px; }
+    input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #cccccc; border-radius: 6px; font-size: 14px; outline: none; transition: border 0.2s; }
+    input:focus, select:focus, textarea:focus { border-color: #3498db; }
+    button { width: 100%; padding: 12px; background-color: #3498db; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+    button:hover { background-color: #2980b9; }
+    button:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+    #status { margin-top: 15px; padding: 10px; border-radius: 6px; text-align: center; font-size: 14px; display: none; }
+    .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>Öğrenci Günlük Ödev Bildirimi</h2>
-        
-        <form id="odevForm">
-            <div class="form-group">
-                <label for="ogrenci-adi">Öğrenci Adı Soyadı:</label>
-                <input type="text" id="ogrenci-adi" name="ogrenciAdi" required placeholder="Örn: Ahmet Yılmaz">
-            </div>
-
-            <div class="form-group">
-                <label>Çalışılan Dersler:</label>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" name="ders" value="Matematik"> Matematik</label>
-                    <label><input type="checkbox" name="ders" value="Geometri"> Geometri</label>
-                    <label><input type="checkbox" name="ders" value="Fizik"> Fizik</label>
-                    <label><input type="checkbox" name="ders" value="Kimya"> Kimya</label>
-                    <label><input type="checkbox" name="ders" value="Biyoloji"> Biyoloji</label>
-                    <label><input type="checkbox" name="ders" value="Türkçe"> Türkçe</label>
-                    <label><input type="checkbox" name="ders" value="Dil Bilgisi"> Dil Bilgisi</label>
-                    <label><input type="checkbox" name="ders" value="Paragraf"> Paragraf</label>
-                    <label><input type="checkbox" name="ders" value="Tarih"> Tarih</label>
-                    <label><input type="checkbox" name="ders" value="Coğrafya"> Coğrafya</label>
-                </div>
-            </div>
-
-            <div class="section-title">Çözülen Sayfaların Fotoğrafları</div>
-            <div class="form-group">
-                <div class="file-upload">
-                    <span class="upload-btn">📷 Fotoğrafları Seç veya Çek (Çoklu Seçim)</span>
-                    <input type="file" id="foto-input" accept="image/*" multiple>
-                </div>
-                <div id="preview-area" class="preview-container"></div>
-            </div>
-
-            <div class="section-title">Genel Bilgiler</div>
-            <div class="form-group">
-                <label for="duygu-durumu">Bugünkü Duygu Durumun:</label>
-                <select id="duygu-durumu" name="duyguDurumu">
-                    <option value="" disabled selected>Lütfen hissini seç...</option>
-                    <option value="Gayretli">Gayretli / İstekli</option>
-                    <option value="Huzurlu">Huzurlu / Sakin</option>
-                    <option value="Tatmin Olmuş">Tatmin Olmuş</option>
-                    <option value="Meraklı">Meraklı</option>
-                    <option value="Yorgun">Yorgun</option>
-                    <option value="Kaygılı">Kaygılı / Gergin</option>
-                    <option value="İsteksiz">İsteksiz / Bıkkın</option>
-                    <option value="Şaşkın">Şaşkın / Kafası Karışık</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="konu">Çalışılan Konular / Notlar:</label>
-                <textarea id="konu" name="konuNotlari" rows="4" placeholder="Bugün hangi konuları çalıştın?"></textarea>
-            </div>
-
-            <button type="submit" id="submitBtn">Raporu Gönder</button>
-            <div id="statusMessage" class="status-msg"></div>
-        </form>
+<div class="card">
+  <h2>Ödev Teslim Formu</h2>
+  <form id="assignmentForm">
+    <div class="form-group">
+      <label for="studentName">Ad Soyad</label>
+      <input type="text" id="studentName" required placeholder="Adınız ve Soyadınız">
     </div>
 
-    <script>
-        const GOOGLE_SCRIPT_URL = "SCRIPT_URL_BURAYA";
-        const form = document.getElementById('odevForm');
-        const fileInput = document.getElementById('foto-input');
-        const previewArea = document.getElementById('preview-area');
-        const statusMessage = document.getElementById('statusMessage');
-        const submitBtn = document.getElementById('submitBtn');
-        let selectedFiles = [];
+    <div class="form-group">
+      <label for="studentClass">Sınıf / Şube</label>
+      <select id="studentClass" required>
+        <option value="">Seçiniz</option>
+        <option value="9-A">9-A</option>
+        <option value="10-A">10-A</option>
+        <option value="11-A">11-A</option>
+        <option value="12-A">12-A</option>
+      </select>
+    </div>
 
-        fileInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files);
-            selectedFiles = selectedFiles.concat(files);
-            renderPreviews();
-            fileInput.value = '';
-        });
+    <div class="form-group">
+      <label for="assignmentTitle">Ödev Konusu / Adı</label>
+      <input type="text" id="assignmentTitle" required placeholder="Örn: Fizik Kuvvet ve Hareket">
+    </div>
 
-        function renderPreviews() {
-            previewArea.innerHTML = '';
-            selectedFiles.forEach((file, index) => {
-                const card = document.createElement('div');
-                card.className = 'preview-card';
+    <div class="form-group">
+      <label for="submissionLink">Ödev Dosya Bağlantısı (Drive / Link)</label>
+      <input type="url" id="submissionLink" required placeholder="https://...">
+    </div>
 
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(file);
+    <div class="form-group">
+      <label for="notes">Notlar (İsteğe Bağlı)</label>
+      <textarea id="notes" rows="3" placeholder="Eklemek istediğiniz bir not var mı?"></textarea>
+    </div>
 
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.className = 'remove-btn';
-                removeBtn.innerHTML = '✕';
-                removeBtn.onclick = () => {
-                    selectedFiles.splice(index, 1);
-                    renderPreviews();
-                };
+    <button type="submit" id="submitBtn">Gönder</button>
+  </form>
+  <div id="status"></div>
+</div>
 
-                card.appendChild(img);
-                card.appendChild(removeBtn);
-                previewArea.appendChild(card);
-            });
-        }
+<script>
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/u/0/home/projects/18hMHWU7Re6rbI6JX9QIING9fK2HTNoRoOKLMx61V9x-jN2aFL_dqspMf/exec";
 
-        const readFileAsBase64 = (file) => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve({
-                    name: file.name,
-                    type: file.type,
-                    data: reader.result
-                });
-                reader.onerror = error => reject(error);
-                reader.readAsDataURL(file);
-            });
-        };
+  document.getElementById('assignmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const submitBtn = document.getElementById('submitBtn');
+    const statusDiv = document.getElementById('status');
+    
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'Gönderiliyor...';
+    statusDiv.style.display = 'none';
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            submitBtn.disabled = true;
-            submitBtn.innerText = 'Gönderiliyor... (Lütfen Bekleyin)';
+    const payload = {
+      studentName: document.getElementById('studentName').value,
+      studentClass: document.getElementById('studentClass').value,
+      assignmentTitle: document.getElementById('assignmentTitle').value,
+      submissionLink: document.getElementById('submissionLink').value,
+      notes: document.getElementById('notes').value
+    };
 
-            try {
-                const filePromises = selectedFiles.map(file => readFileAsBase64(file));
-                const uploadedFiles = await Promise.all(filePromises);
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      statusDiv.className = 'success';
+      statusDiv.innerText = 'Ödeviniz başarıyla iletildi!';
+      statusDiv.style.display = 'block';
+      document.getElementById('assignmentForm').reset();
+    })
+    .catch(error => {
+      statusDiv.className = 'error';
+      statusDiv.innerText = 'Bir hata oluştu. Lütfen tekrar deneyiniz.';
+      statusDiv.style.display = 'block';
+      console.error('Error:', error);
+    })
+    .finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.innerText = 'Gönder';
+    });
+  });
+</script>
 
-                const dersler = Array.from(document.querySelectorAll('input[name="ders"]:checked')).map(cb => cb.value);
-
-                const payload = {
-                    ogrenciAdi: document.getElementById('ogrenci-adi').value,
-                    ders: dersler,
-                    duyguDurumu: document.getElementById('duygu-durumu').value,
-                    konuNotlari: document.getElementById('konu').value,
-                    sayfaFotograflari: uploadedFiles
-                };
-
-                await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                statusMessage.className = 'status-msg success';
-                statusMessage.innerText = 'Rapor başarıyla gönderildi ve kaydedildi!';
-                form.reset();
-                selectedFiles = [];
-                renderPreviews();
-
-            } catch (err) {
-                statusMessage.className = 'status-msg error';
-                statusMessage.innerText = 'Gönderim sırasında hata oluştu. Lütfen tekrar deneyin.';
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'Raporu Gönder';
-            }
-        });
-    </script>
 </body>
 </html>
