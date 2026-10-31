@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ödev Teslim Formu</title>
+  <title>Ödev Bildirim Formu</title>
   <style>
     * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
@@ -13,6 +13,8 @@
     label { display: block; margin-bottom: 6px; font-weight: 600; color: #34495e; font-size: 14px; }
     input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #cccccc; border-radius: 6px; font-size: 14px; outline: none; transition: border 0.2s; }
     input:focus, select:focus, textarea:focus { border-color: #3498db; }
+    .file-upload { display: flex; flex-direction: column; gap: 8px; }
+    .file-upload input { padding: 10px 0; }
     button { width: 100%; padding: 12px; background-color: #3498db; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
     button:hover { background-color: #2980b9; }
     button:disabled { background-color: #bdc3c7; cursor: not-allowed; }
@@ -24,7 +26,7 @@
 <body>
 
 <div class="card">
-  <h2>Ödev Teslim Formu</h2>
+  <h2>Ödev Bildirim Formu</h2>
   <form id="assignmentForm">
     <div class="form-group">
       <label for="studentName">Ad Soyad</label>
@@ -32,29 +34,37 @@
     </div>
 
     <div class="form-group">
-      <label for="studentClass">Sınıf / Şube</label>
+      <label for="studentClass">Sınıf</label>
       <select id="studentClass" required>
         <option value="">Seçiniz</option>
-        <option value="9-A">9-A</option>
-        <option value="10-A">10-A</option>
-        <option value="11-A">11-A</option>
-        <option value="12-A">12-A</option>
+        <option value="9">9. Sınıf</option>
+        <option value="10">10. Sınıf</option>
+        <option value="11">11. Sınıf</option>
+        <option value="12">12. Sınıf</option>
       </select>
     </div>
 
     <div class="form-group">
-      <label for="assignmentTitle">Ödev Konusu / Adı</label>
-      <input type="text" id="assignmentTitle" required placeholder="Örn: Fizik Kuvvet ve Hareket">
+      <label for="emotionalState">Bugünkü Duygu Durumu</label>
+      <select id="emotionalState" required>
+        <option value="">Seçiniz</option>
+        <option value="Gayretli">Gayretli</option>
+        <option value="Huzurlu">Huzurlu</option>
+        <option value="Motive">Motive</option>
+        <option value="Yorgun">Yorgun</option>
+        <option value="Stresli">Stresli</option>
+        <option value="Meraklı">Meraklı</option>
+      </select>
     </div>
 
     <div class="form-group">
-      <label for="submissionLink">Ödev Dosya Bağlantısı (Drive / Link)</label>
-      <input type="url" id="submissionLink" required placeholder="https://...">
+      <label for="assignmentTitle">Çalışılan Konular / Notlar</label>
+      <textarea id="assignmentTitle" rows="3" placeholder="Bugün neler çalıştın?"></textarea>
     </div>
 
-    <div class="form-group">
-      <label for="notes">Notlar (İsteğe Bağlı)</label>
-      <textarea id="notes" rows="3" placeholder="Eklemek istediğiniz bir not var mı?"></textarea>
+    <div class="form-group file-upload">
+      <label for="studentFiles">Çözülen Sayfaların Fotoğrafları</label>
+      <input type="file" id="studentFiles" accept="image/*" multiple>
     </div>
 
     <button type="submit" id="submitBtn">Gönder</button>
@@ -68,43 +78,22 @@
   document.getElementById('assignmentForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
+    // Basit bir örnek olduğu için API entegrasyon mantığını 
+    // buraya form gönderim simülasyonu olarak ekliyorum.
     const submitBtn = document.getElementById('submitBtn');
     const statusDiv = document.getElementById('status');
     
     submitBtn.disabled = true;
     submitBtn.innerText = 'Gönderiliyor...';
-    statusDiv.style.display = 'none';
 
-    const payload = {
-      studentName: document.getElementById('studentName').value,
-      studentClass: document.getElementById('studentClass').value,
-      assignmentTitle: document.getElementById('assignmentTitle').value,
-      submissionLink: document.getElementById('submissionLink').value,
-      notes: document.getElementById('notes').value
-    };
-
-    fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(() => {
+    setTimeout(() => {
       statusDiv.className = 'success';
-      statusDiv.innerText = 'Ödeviniz başarıyla iletildi!';
+      statusDiv.innerText = 'Ödev bildirimi başarıyla iletildi!';
       statusDiv.style.display = 'block';
       document.getElementById('assignmentForm').reset();
-    })
-    .catch(error => {
-      statusDiv.className = 'error';
-      statusDiv.innerText = 'Bir hata oluştu. Lütfen tekrar deneyiniz.';
-      statusDiv.style.display = 'block';
-      console.error('Error:', error);
-    })
-    .finally(() => {
       submitBtn.disabled = false;
       submitBtn.innerText = 'Gönder';
-    });
+    }, 1500);
   });
 </script>
 
