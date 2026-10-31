@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Öğrenci Takip Sistemi</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; }
+        .container { max-width: 600px; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin: auto; }
+        h2 { color: #2c3e50; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { background-color: #27ae60; color: white; padding: 12px; border: none; border-radius: 5px; width: 100%; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #219653; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Öğrenci Günlük Çalışma Bildirimi</h2>
+        
+        <!-- Netlify Forms Özelliği için 'netlify' ve 'name' etiketleri çok önemlidir -->
+        <form name="ogrenci-takip" method="POST" netlify>
+            <div class="form-group">
+                <label for="ogrenci-adi">Öğrenci Adı Soyadı:</label>
+                <input type="text" id="ogrenci-adi" name="ogrenciAdi" required placeholder="Örn: Ahmet Yılmaz">
+            </div>
+
+            <div class="form-group">
+                <label for="ders">Çalışılan Ders:</label>
+                <select id="ders" name="ders">
+                    <option value="Fizik">Fizik</option>
+                    <option value="Matematik">Matematik</option>
+                    <option value="Kimya">Kimya</option>
+                    <option value="Biyoloji">Biyoloji</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="soru-sayisi">Çözülen Soru Sayısı:</label>
+                <input type="number" id="soru-sayisi" name="soruSayisi" placeholder="Örn: 75">
+            </div>
+
+            <div class="form-group">
+                <label for="konu">Çalışılan Konu / Notlar:</label>
+                <textarea id="konu" name="konuNotlari" rows="4" placeholder="Bugün hangi konuları çalıştın, zorlandığın yerler var mı?"></textarea>
+            </div>
+
+            <button type="submit">Raporu Gönder</button>
+        </form>
+    </div>
+
+</body>
+</html>
