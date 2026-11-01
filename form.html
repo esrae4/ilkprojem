@@ -1,14 +1,163 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Öğrenci Formu</title>
+    <title>Öğrenci Ödev Takip Sistemi</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px 16px;
+            background: #f3f5f9;
+            font-family: Arial, sans-serif;
+            color: #263247;
+        }
+
+        .container {
+            max-width: 520px;
+            margin: 30px auto;
+            padding: 28px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            text-align: center;
+            color: #687386;
+            margin-bottom: 28px;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 7px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d5dbe5;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 85px;
+            resize: vertical;
+        }
+
+        input[type="file"] {
+            background: #f8f9fc;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #344b72;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #263b60;
+        }
+
+        .note {
+            margin-top: 14px;
+            color: #7b8493;
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>Öğrenci Formu</h1>
+    <div class="container">
+
+        <h1>Ödev Takip Sistemi</h1>
+
+        <p class="description">
+            Tamamladığın ödev bilgilerini buradan bildir.
+        </p>
+
+        <form id="homeworkForm">
+
+            <label for="studentName">Ad Soyad</label>
+            <input
+                type="text"
+                id="studentName"
+                name="studentName"
+                placeholder="Adını ve soyadını yaz"
+                required
+            >
+
+            <label for="assignment">Ödev Konusu</label>
+            <textarea
+                id="assignment"
+                name="assignment"
+                placeholder="Yaptığın ödevin konusunu yaz"
+                required
+            ></textarea>
+
+            <label for="completionDate">Tamamlama Tarihi</label>
+            <input
+                type="date"
+                id="completionDate"
+                name="completionDate"
+                required
+            >
+
+            <label for="questionCount">Çözülen Soru Sayısı</label>
+            <input
+                type="number"
+                id="questionCount"
+                name="questionCount"
+                min="0"
+                placeholder="Örneğin: 80"
+                required
+            >
+
+            <label for="photo">Çözülen Soruların Fotoğrafı</label>
+            <input
+                type="file"
+                id="photo"
+                name="photo"
+                accept="image/*"
+                multiple
+                required
+            >
+
+            <button type="submit">
+                Ödevimi Bildir
+            </button>
+
+            <p class="note">
+                Fotoğraf ve ödev bilgileri henüz sisteme gönderilmiyor.
+            </p>
+
+        </form>
+
+    </div>
 
 </body>
 </html>
