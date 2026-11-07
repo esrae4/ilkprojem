@@ -1,119 +1,215 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ödev Bildirim Formu</title>
-  <style>
-    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-    .card { background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 480px; }
-    h2 { margin-top: 0; color: #2c3e50; text-align: center; margin-bottom: 24px; }
-    .form-group { margin-bottom: 18px; }
-    label { display: block; margin-bottom: 6px; font-weight: 600; color: #34495e; font-size: 14px; }
-    input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #cccccc; border-radius: 6px; font-size: 14px; outline: none; transition: border 0.2s; }
-    input:focus, select:focus, textarea:focus { border-color: #3498db; }
-    .file-upload { display: flex; flex-direction: column; gap: 8px; }
-    .file-upload input { padding: 10px 0; }
-    button { width: 100%; padding: 12px; background-color: #3498db; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-    button:hover { background-color: #2980b9; }
-    button:disabled { background-color: #bdc3c7; cursor: not-allowed; }
-    #status { margin-top: 15px; padding: 10px; border-radius: 6px; text-align: center; font-size: 14px; display: none; }
-    .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Öğrenci Takip Sistemi</title>
+<style>
+:root{font-family:Arial,sans-serif;color:#202938;background:#f4f6fa}
+*{box-sizing:border-box}body{margin:0;padding:24px}.wrap{max-width:850px;margin:auto}
+header{margin-bottom:20px}h1{font-size:25px;margin:0 0 7px}p{line-height:1.5}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+button,.tab{border:0;border-radius:9px;padding:11px 16px;cursor:pointer;font-size:15px}
+.tab{background:#e4e9f2;color:#253044}.tab.active,button.primary{background:#263b62;color:white}
+.card{background:white;border:1px solid #e2e7ef;border-radius:14px;padding:22px;margin:14px 0;box-shadow:0 3px 12px #14213a0a}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 6px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd3df;border-radius:8px;font:inherit;background:white}
+fieldset{border:0;padding:0;margin:14px 0}legend{font-weight:700;margin-bottom:8px}
+.subjects{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.subject{border:1px solid #dce2eb;padding:9px;border-radius:8px;font-weight:400;margin:0;display:flex;gap:8px;align-items:center}
+.subject input{width:auto}.topicbox{display:none;background:#f7f9fc;border:1px solid #e1e6ef;border-radius:9px;padding:10px;margin:8px 0}
+.topicbox label{margin-top:2px}.hint{font-size:13px;color:#5d6879}
+.notice{padding:12px;border-radius:9px;background:#fff7e6;border:1px solid #f1dfb5;color:#654b12;margin:12px 0}
+.success{background:#eef5ff;border:1px solid #cbdcf7;color:#1e3d68;padding:12px;border-radius:9px;margin-top:14px;display:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+button.secondary{background:#e8edf5;color:#26344a}
+.role-panel{display:none}.role-panel.active{display:block}
+@media(max-width:600px){body{padding:13px}.grid{grid-template-columns:1fr}.subjects{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:16px}}
+</style>
 </head>
 <body>
+<div class="wrap">
+<header>
+<h1>Öğrenci Takip Sistemi</h1>
+<p>Günlük çalışma bilgilerini ve gelişimini kaydetmek için öğrenci girişini kullan.</p>
+</header>
 
-<div class="card">
-  <h2>Ödev Bildirim Formu</h2>
-  <form id="assignmentForm">
-    <div class="form-group">
-      <label for="studentName">Ad Soyad</label>
-      <input type="text" id="studentName" required placeholder="Adınız ve Soyadınız">
-    </div>
+<nav class="tabs" aria-label="Giriş türü">
+<button class="tab active" data-role="student">Öğrenci girişi</button>
+<button class="tab" data-role="parent">Veli girişi</button>
+<button class="tab" data-role="teacher">Öğretmen girişi</button>
+</nav>
 
-    <div class="form-group">
-      <label for="studentClass">Sınıf</label>
-      <select id="studentClass" required>
-        <option value="">Seçiniz</option>
-        <option value="9">9. Sınıf</option>
-        <option value="10">10. Sınıf</option>
-        <option value="11">11. Sınıf</option>
-        <option value="12">12. Sınıf</option>
-      </select>
-    </div>
+<section id="student" class="role-panel active">
+<form id="studentForm" class="card">
+<h2>Günlük çalışma bildirimi</h2>
+<div class="grid">
+<div><label for="name">Ad</label><input id="name" name="name" autocomplete="given-name" required></div>
+<div><label for="surname">Soyad</label><input id="surname" name="surname" autocomplete="family-name" required></div>
+</div>
+<label for="grade">Sınıf</label>
+<select id="grade" name="grade" required>
+<option value="">Sınıfını seç</option>
+<option>9. sınıf</option><option>10. sınıf</option><option>11. sınıf</option><option>12. sınıf</option><option>Mezun</option>
+</select>
 
-    <div class="form-group">
-      <label for="emotionalState">Bugünkü Duygu Durumu</label>
-      <select id="emotionalState" required>
-        <option value="">Seçiniz</option>
-        <option value="Gayretli">Gayretli</option>
-        <option value="Huzurlu">Huzurlu</option>
-        <option value="Motive">Motive</option>
-        <option value="Yorgun">Yorgun</option>
-        <option value="Stresli">Stresli</option>
-        <option value="Meraklı">Meraklı</option>
-      </select>
-    </div>
+<fieldset>
+<legend>Bugün çalıştığın dersleri seç</legend>
+<p class="hint">Birden fazla ders seçebilirsin. Seçtiğin her ders için ayrı konu alanı açılır.</p>
+<div id="subjects" class="subjects"></div>
+<div id="topics"></div>
+</fieldset>
 
-    <div class="form-group">
-      <label for="assignmentTitle">Çalışılan Konular / Notlar</label>
-      <textarea id="assignmentTitle" rows="3" placeholder="Bugün neler çalıştın?"></textarea>
-    </div>
+<div class="grid">
+<div><label for="questions">Çözdüğün toplam soru sayısı</label><input id="questions" name="questions" type="number" min="0" step="1" required></div>
+<div><label for="bookPages">Okuduğun kitap sayfası</label><input id="bookPages" name="bookPages" type="number" min="0" step="1" value="0" required></div>
+</div>
 
-    <div class="form-group file-upload">
-      <label for="studentFiles">Çözülen Sayfaların Fotoğrafları</label>
-      <input type="file" id="studentFiles" accept="image/*" multiple>
-    </div>
+<label for="photos">Çözdüğün test kitabı sayfalarının fotoğrafları</label>
+<input id="photos" name="photos" type="file" accept="image/*" multiple>
+<p class="hint">Fotoğraflar bu formda seçilir; sunucuya yükleme bağlantısı henüz kurulmamıştır.</p>
 
-    <button type="submit" id="submitBtn">Gönder</button>
-  </form>
-  <div id="status"></div>
+<label for="mood">Bugünkü duygu durumun</label>
+<select id="mood" name="mood" required>
+<option value="">Sana en yakın duyguyu seç</option>
+<optgroup label="İhtiyaçların karşılandığında">
+<option>Neşeli</option><option>Mutlu</option><option>Huzurlu</option><option>Sakin</option>
+<option>Umutlu</option><option>Heyecanlı</option><option>Meraklı</option><option>Canlı</option>
+<option>Rahatlamış</option><option>Güvende</option><option>Memnun</option><option>Şükran duyan</option>
+<option>İlgili</option><option>İlham almış</option><option>Özgüvenli</option>
+</optgroup>
+<optgroup label="İhtiyaçların karşılanmadığında">
+<option>Üzgün</option><option>Kaygılı</option><option>Korkmuş</option><option>Endişeli</option>
+<option>Öfkeli</option><option>Kızgın</option><option>Sinirli</option><option>Hayal kırıklığına uğramış</option>
+<option>Yalnız</option><option>Şaşkın</option><option>Kararsız</option><option>Yorgun</option>
+<option>Bunalmış</option><option>Gergin</option><option>Cesareti kırılmış</option>
+<option>Utanmış</option><option>Mahcup</option><option>Huzursuz</option><option>İsteksiz</option>
+</optgroup>
+</select>
+<p class="hint">Bunlar Şiddetsiz İletişim yaklaşımındaki duygu ifadelerinden oluşturulmuş bir seçim listesidir. Aynı anda birden fazla duygu yaşıyorsan en baskın olanı seçebilirsin.</p>
+
+<label for="screenHours">Ders dışı ekran süresi</label>
+<div class="grid">
+<div><label for="screenHours">Saat</label><input id="screenHours" name="screenHours" type="number" min="0" max="24" value="0"></div>
+<div><label for="screenMinutes">Dakika</label><input id="screenMinutes" name="screenMinutes" type="number" min="0" max="59" value="0"></div>
+</div>
+<div class="actions">
+<button class="primary" type="submit">Formu kontrol et</button>
+<button class="secondary" type="reset">Temizle</button>
+</div>
+<div id="formMessage" class="success" role="status"></div>
+</form>
+</section>
+
+<section id="parent" class="role-panel">
+<div class="card"><h2>Veli girişi</h2><p>Veli hesabı ve öğrenciyle eşleştirme henüz kurulmadı. Bu alan, veritabanı ve güvenli giriş sistemi eklendiğinde öğrencinin gelişim raporlarını gösterecek.</p></div>
+</section>
+
+<section id="teacher" class="role-panel">
+<div class="card"><h2>Öğretmen girişi</h2><p>Öğretmen hesabı, öğrenci listesi ve ödev kayıtlarını görüntüleme paneli henüz kurulmadı. Veritabanı bağlantısı ve yetkilendirme eklendiğinde burada öğrenci bildirimleri listelenecek.</p></div>
+</section>
+
+<div class="notice"><strong>Önemli:</strong> Bu dosya formun arayüzünü ve ders seçimine göre konu alanlarının açılmasını hazırlar. Henüz Supabase/veritabanı bağlantısı, gerçek kullanıcı girişi, fotoğraf yükleme veya öğretmen-veli kayıt görüntüleme işlevi yoktur. Bu nedenle form gönderimi gerçek kayıt oluşturmaz.</div>
 </div>
 
 <script>
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/u/0/home/projects/18hMHWU7Re6rbI6JX9QIING9fK2HTNoRoOKLMx61V9x-jN2aFL_dqspMf/exec";
+const courseList = [
+"Türkçe","Matematik","Geometri","Fizik","Kimya","Biyoloji",
+"Tarih","Coğrafya","Felsefe","Din Kültürü ve Ahlak Bilgisi",
+"Türk Dili ve Edebiyatı","İngilizce"
+];
 
-  document.getElementById('assignmentForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const submitBtn = document.getElementById('submitBtn');
-    const statusDiv = document.getElementById('status');
-    
-    submitBtn.disabled = true;
-    submitBtn.innerText = 'Gönderiliyor...';
+const subjects = document.getElementById("subjects");
+const topics = document.getElementById("topics");
 
-    const payload = {
-      studentName: document.getElementById('studentName').value,
-      studentClass: document.getElementById('studentClass').value,
-      emotionalState: document.getElementById('emotionalState').value,
-      assignmentTitle: document.getElementById('assignmentTitle').value,
-    };
+courseList.forEach((course,i)=>{
+  const label=document.createElement("label");
+  label.className="subject";
 
-    fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(() => {
-      statusDiv.className = 'success';
-      statusDiv.innerText = 'Ödev bildirimi başarıyla iletildi!';
-      statusDiv.style.display = 'block';
-      document.getElementById('assignmentForm').reset();
-    })
-    .catch(() => {
-      statusDiv.className = 'error';
-      statusDiv.innerText = 'Gönderim esnasında bir aksaklık yaşandı.';
-      statusDiv.style.display = 'block';
-    })
-    .finally(() => {
-      submitBtn.disabled = false;
-      submitBtn.innerText = 'Gönder';
-    });
+  const input=document.createElement("input");
+  input.type="checkbox";
+  input.value=course;
+  input.id="course"+i;
+
+  input.addEventListener("change",()=>{
+    let box=document.getElementById("topicbox"+i);
+
+    if(input.checked){
+      if(!box){
+        box=document.createElement("div");
+        box.className="topicbox";
+        box.id="topicbox"+i;
+
+        const title=document.createElement("strong");
+        title.textContent=course+" – çalıştığın konu";
+
+        const field=document.createElement("input");
+        field.type="text";
+        field.name="topic_"+course;
+        field.placeholder=course+" konu adını yaz";
+        field.setAttribute("aria-label",course+" konu adı");
+
+        const caption=document.createElement("label");
+        caption.textContent="Konu";
+
+        box.append(title,caption,field);
+        topics.appendChild(box);
+      }
+      box.style.display="block";
+    } else if(box){
+      box.remove();
+    }
   });
-</script>
 
+  label.append(input,document.createTextNode(course));
+  subjects.appendChild(label);
+});
+
+document.querySelectorAll(".tab").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(b=>{
+    b.classList.toggle("active",b===btn);
+  });
+  document.querySelectorAll(".role-panel").forEach(p=>{
+    p.classList.toggle("active",p.id===btn.dataset.role);
+  });
+ });
+});
+
+document.getElementById("studentForm").addEventListener("submit",e=>{
+ e.preventDefault();
+
+ const selected=[...subjects.querySelectorAll("input:checked")];
+ const msg=document.getElementById("formMessage");
+
+ if(!selected.length){
+  msg.style.display="block";
+  msg.textContent="Lütfen en az bir ders seç.";
+  return;
+ }
+
+ const missing=selected.find(x=>{
+  const field=document.querySelector('[name="topic_'+x.value+'"]');
+  return !field || !field.value.trim();
+ });
+
+ if(missing){
+  msg.style.display="block";
+  msg.textContent=missing.value+" için konu adını da yazmalısın.";
+  return;
+ }
+
+ msg.style.display="block";
+ msg.textContent="Form alanları kontrol edildi. Ancak veritabanı bağlantısı henüz kurulmadığı için bilgiler öğretmene gönderilmedi ve kalıcı olarak kaydedilmedi.";
+});
+
+document.getElementById("studentForm").addEventListener("reset",()=>{
+ setTimeout(()=>{
+  topics.innerHTML="";
+  document.getElementById("formMessage").style.display="none";
+ },0);
+});
+</script>
 </body>
 </html>
